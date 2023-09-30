@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver.chrome import ChromeDriverManager
-from webdriver.firefox import GeckoDriverManager
+from webdriver.firefox import ChromeDriverManager
 
 with open("./testdata.yaml") as f:
     testdata = yaml.safe_load(f)
@@ -14,7 +14,7 @@ with open("./testdata.yaml") as f:
 class Site:
     def __init__(self, address):
         if browser == "firefox":
-            service = Service(executable_path=GeckoDriverManager().install())
+            service = Service(executable_path=ChromeDriverManager().install())
             options = webdriver.FirefoxOptions()
             self.driver = webdriver.Firefox(service=service, options=options)
         elif browser == "chrome":
@@ -35,22 +35,9 @@ class Site:
             element = None
         return element
 
-        # self.driver = webdriver.Chrome(service=service, options=options)
-        # self.driver.maximize_window()
-        # self.driver.get(address)
-        # time.sleep(data["sleep_time"])
 
-    def find_el(self, mode, path):
-        if mode == "css":
-            element = self.driver.find_element(By.CSS_SELECTOR, path)
-        elif mode == "xpath":
-            element = self.driver.find_element(By.XPATH, path)
-        else:
-            element = None
-        return element
-
-    def get_el_property(self, mode, path, property):
-        element = self.find_el(mode, path)
+    def get_element_property(self, mode, path, property):
+        element = self.find_element(mode, path)
         return element.value_of_css_property(property)
 
     def close(self):
